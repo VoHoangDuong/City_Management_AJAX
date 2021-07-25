@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home Page</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/resources/css/sweetalert2.min.css">
+    <script type="text/javascript" src="/resources/js/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/resources/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="/resources/js/jquery.validate-1.19.3.min.js"></script>
+    <script type="text/javascript" src="/resources/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/resources/js/myjs.js"></script>
+    <link rel="stylesheet" href="/resources/css/style.css">
+    <link rel="stylesheet" href="/resources/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<div class="col d-flex justify-content-center">
+    <h3>City List</h3>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <button type="button" class="btn btn-outline-primary updateCity" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" onclick="loadAddNew()"><i class="far fa-create"></i>Create</button>
+        </div>
+    </div>
+</div>
+<table id="cityList" class="table table-hover">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>City</th>
+        <th>Country</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>View</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="city : ${cities}">
+        <tr th:id="'row'+${city.id}">
+            <td th:text="${city.id}"></td>
+            <td th:text="${city.name}"></td>
+            <td th:text="${city.country.name}"></td>
+            <td><button type="button" class="btn btn-outline-primary updateCity" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" th:attr="onclick=|loadEditData('${city.id}')|"><i class="far fa-edit"></i>Edit</button><input type="hidden" id="id" th:value="${city.id}"></td>
+            <td><button class="btn btn-outline-danger"  th:attr="onclick=|deleteCity('${city.id}',this)|" ><i class="fas fa-trash-alt"></i>Delete</button></td>
+            <td><button type="button" class="btn btn-outline-primary viewCity" data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo" th:attr="onclick=|getData('${city.id}')|"><i class="fas fa-eye"></i>View</button><input type="hidden" th:value="${city.id}"></td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><span id="exampleModalLabelSpan"></span> </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form">
+                    <div class="md-6">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" name="upName" id="upName">
+                    </div>
+                    <div class="md-6">
+                        <label>Country</label>
+                        <select class="form-control" name="upCountry" id="upCountry">
+                            <option th:each="country : ${countries}"
+                                    th:value="${country.getId()}"
+                                    th:text="${country.getName()}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="md-6">
+                        <label class="col-form-label">Acreage:</label>
+                        <input type="number" class="form-control"name="upAcreage" id="upAcreage">
+                    </div>
+                    <div class="md-6">
+                        <label class="col-form-label">Population:</label>
+                        <input type="number" class="form-control" name="upPopulation" id="upPopulation">
+                    </div>
+                    <div class="md-6">
+                        <label class="col-form-label">GDP:</label>
+                        <input type="number" class="form-control" name="upGDP" id="upGDP">
+                    </div>
+                    <div class="md-6">
+                        <label class="col-form-label">Description:</label>
+                        <input type="text" class="form-control" name="upDescription" id="upDescription">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close-modal" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="editCity()">Save</button>
+                <input type="hidden" id="upId" name="upId">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2"><span id="exampleModalLabelSpan2"></span> </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="md-6">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" name="name" id="name" readonly>
+                    </div>
+                    <div class="md-6">
+                        <label>Country</label>
+                        <input class="form-control" name="country" id="country" readonly>
+                    </div>
+                    <div class="md-6">
+                        <label class="col-form-label">Acreage:</label>
+                        <input type="number" class="form-control"name="acreage" id="acreage" readonly>
+                    </div>
+                    <div class="md-6">
+                        <label class="col-form-label">Population:</label>
+                        <input type="number" class="form-control" name="population" id="population" readonly>
+                    </div>
+                    <div class="md-6">
+                        <label class="col-form-label">GDP:</label>
+                        <input type="number" class="form-control" name="GDP" id="GDP" readonly>
+                    </div>
+                    <div class="md-6">
+                        <label class="col-form-label">Description:</label>
+                        <input type="text" class="form-control" name="description" id="description" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close-modal" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/resources/js/validator.js"></script>
+</body>
+</html>
