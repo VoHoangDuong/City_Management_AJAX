@@ -157,7 +157,6 @@ function deleteCity(cityID,button){
     event.preventDefault();
 }
 
-
 function loadAddNew(){
     $('#exampleModalLabelSpan').text("Add New");
     $('#upId').val(0);
@@ -165,6 +164,6 @@ function loadAddNew(){
     $('#upCountry').val("");
     $('#upAcreage').val(0);
     $('#upPopulation').val(0);
-    $('#upGDP').val("");
+    $('#upGDP').val(0);
     $('#upDescription').val("");
 }

@@ -157,7 +157,6 @@ function deleteCity(cityID,button){
     event.preventDefault();
 }
 
-
 function loadAddNew(){
     $('#exampleModalLabelSpan').text("Add New");
     $('#upId').val(0);
